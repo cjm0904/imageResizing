@@ -1,0 +1,67 @@
+<html>
+<head>
+	
+</head>
+<body>
+	<h2> 기본이미지 </h2>
+	<img id = "defaultImage">
+
+	<h2> 리사이즈 이미지</h2>
+	<canvas id = "resizingImage" width="100" hegiht="100">
+		
+	</canvas>
+
+</body>
+</html>
+
+<script type="text/javascript">
+	var imagePath = "https://cc-prod.scene7.com/is/image/CCProdAuthor/moon-photography_P2b_720x720?$pjpeg$&jpegSize=200&wid=720"
+	var defaultImage = document.getElementById("defaultImage");
+	defaultImage.src = imagePath;
+
+	//var resizingImage = document.getElementById("resizingImage");
+
+	getThumbFile(imagePath);
+
+	function getThumbFile(_IMG){
+		var canvas = document.getElementById("resizingImage");
+  		var width = '100px'; //리사이징하여 그릴 가로 길이
+  		var height ='100px'; //리사이징하여 그릴 세로 길이
+  		var ctx = canvas.getContext("2d");
+  		var img = new Image();
+  		img.src = imagePath;
+  		img.crossOrigin = 'Anonymous';
+  		img.onload = function(){
+  			
+  			var sx = 0;
+  			var sy = 0;
+  			var sWidth = 720;
+  			var sHeight = 720;
+  			var dx = 0;
+  			var dy = 0;
+  			var dWidth = 100;
+  			var dHeight = 100;
+
+  			ctx.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+  			//ctx.drawImage(img, 720,720, 100, 100);
+
+  			var dataURL = canvas.toDataURL(imagePath); //png => jpg 등으로 변환 가능
+  			var byteString = atob(dataURL.split(',')[1]);
+  			var mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+  			var ab = new ArrayBuffer(byteString.length);
+  			var ia = new Uint8Array(ab);
+  			for (var i = 0; i < byteString.length; i++) {
+  				ia[i] = byteString.charCodeAt(i);
+  			}
+
+  		//리사이징된 file 객체
+	  	//var tmpThumbFile = new Blob([ab], {type: mimeString});
+	  	//return tmpThumbFile;
+	  	return new Blob(ab, {type: 'image/jpeg'});
+  		}
+  //canvas의 dataurl를 blob(file)화 하는 과정
+	  
+	}
+
+</script>
+	
